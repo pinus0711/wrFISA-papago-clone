@@ -19,7 +19,25 @@ sourceTextArea.addEventListener('input', (event) => {
     timer = setTimeout(() => {
         const text = event.target.value;
 
+        const body = JSON.stringify({ query: text });
         
+        // server.js로 비동기 요청 전송
+        const xhr = new XMLHttpRequest();
+
+        
+        xhr.onload = () => {
+            if (xhr.readyState === xhr.DONE && xhr.status === 200) {
+                const responseData = xhr.responseText;
+                const result = JSON.parse(responseData);
+                console.log(result); 
+            }
+        }
+        const url = '/detectLangs';
+        xhr.open('POST', url);
+        
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(body);
+
     }, 2000);
 
 });

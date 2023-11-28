@@ -1,25 +1,24 @@
 const express = require('express')
 const app = express()
 
-// get-> HTTP GET method, 
-// '/' -> Root 경로로 요청
-// function~ -> 콜백
+const client_id = 'mLsrrgBM6JHM2QG6n0RE';
+const client_secret = 'aKrogkLX6W';
 
-// http://localhost:3000'/' 경로로 요청 시 동작할 핸들러(handler)
-// req -> request - HTTP Request 객체
-// res -> response - HTTP Response 객체(응답 시 사용할 데이터, 부가 정보를 담을 때 사용)
-app.get('/', function (req, res) {
-  res.send('Hello World')
-})
+// public이라는 이름의 폴더에 정적 리소스 보관 후 응답하도록 미들웨어 추가
+app.use(express.static('public'));
 
-var client_id = 'mLsrrgBM6JHM2QG6n0RE';
-var client_secret = 'aKrogkLX6W';
+// 역직렬화용 미들웨어 추가
+app.use(express.json());
+
+app.get('/', (req, res) => res.sendFile('index.html'));
 
 // localhost:3000/detectLangs로 요청 시 동작할 핸들러
-app.get('/detectLangs', function (req, res) {
-   const query = "언어를 감지할 문장을 입력하세요.";
+app.post('/detectLangs', function (req, res) {
    const url = 'https://openapi.naver.com/v1/papago/detectLangs';
    const request = require('request');
+
+   const query = req.body;
+
    const options = {
        url,
        form: {'query': query},
@@ -27,8 +26,10 @@ app.get('/detectLangs', function (req, res) {
     };
    request.post(options, function (error, response, body) {
      if (!error && response.statusCode == 200) {
-       res.writeHead(200, {'Content-Type': 'text/json;charset=utf-8'});
-       res.end(body);
+      //  res.writeHead(200, {'Content-Type': 'text/json;charset=utf-8'});
+      //  res.end(body);
+
+      res.send(body); // 응답 결과를 app.js로 전달하는 코드
      } else {
        res.status(response.statusCode).end();
        console.log('error = ' + response.statusCode);
