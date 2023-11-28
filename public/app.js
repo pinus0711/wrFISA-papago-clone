@@ -24,7 +24,6 @@ sourceTextArea.addEventListener('input', (event) => {
         // server.js로 비동기 요청 전송
         const xhr = new XMLHttpRequest();
 
-        
         xhr.onload = () => {
             if (xhr.readyState === xhr.DONE && xhr.status === 200) {
                 const responseData = xhr.responseText;
@@ -36,6 +35,7 @@ sourceTextArea.addEventListener('input', (event) => {
         xhr.open('POST', url);
         
         xhr.setRequestHeader('Content-Type', 'application/json');
+        
         xhr.send(body);
 
     }, 2000);

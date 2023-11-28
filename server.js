@@ -17,18 +17,18 @@ app.post('/detectLangs', function (req, res) {
    const url = 'https://openapi.naver.com/v1/papago/detectLangs';
    const request = require('request');
 
-   const query = req.body;
-
    const options = {
        url,
-       form: {'query': query},
-       headers: {'X-Naver-Client-Id':client_id, 'X-Naver-Client-Secret': client_secret}
+       form: req.body,
+       headers: {
+        'Content-Type': 'application/json',
+        'X-Naver-Client-Id':client_id, 
+        'X-Naver-Client-Secret': client_secret
+      }
     };
+
    request.post(options, function (error, response, body) {
      if (!error && response.statusCode == 200) {
-      //  res.writeHead(200, {'Content-Type': 'text/json;charset=utf-8'});
-      //  res.end(body);
-
       res.send(body); // 응답 결과를 app.js로 전달하는 코드
      } else {
        res.status(response.statusCode).end();
