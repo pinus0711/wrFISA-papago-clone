@@ -23,19 +23,42 @@ sourceTextArea.addEventListener('input', (event) => {
         
         // server.js로 비동기 요청 전송
         const xhr = new XMLHttpRequest();
+        const xhr2 = new XMLHttpRequest();
 
         xhr.onload = () => {
             if (xhr.readyState === xhr.DONE && xhr.status === 200) {
                 const responseData = xhr.responseText;
                 const result = JSON.parse(responseData);
-                console.log(result); 
+                
+                const url = '/translate';
+                
+                const sourceLanguage = result.langCode;
+                console.log(sourceLanguage);
+                
+                const body = JSON.stringify({
+                    source: sourceLanguage,
+                    target: targetLanguage,
+                    text
+                });
+                
+                xhr2.open('POST', url);
+                xhr2.onload = () => {
+                    if (xhr.readyState === xhr.DONE && xhr.status === 200) {
+                        console.log('called');
+                        console.log(xhr2.response);
+                    }
+                }
+
+                xhr2.setRequestHeader('Content-Type', 'application/json');
+                xhr2.send(body);
             }
         }
+
         const url = '/detectLangs';
         xhr.open('POST', url);
         
         xhr.setRequestHeader('Content-Type', 'application/json');
-        
+
         xhr.send(body);
 
     }, 2000);

@@ -1,8 +1,9 @@
 const express = require('express')
 const app = express()
 
-const client_id = 'mLsrrgBM6JHM2QG6n0RE';
-const client_secret = 'aKrogkLX6W';
+const client_id = '자신의 key값';
+const client_secret = '자신의 secret값';
+
 
 // public이라는 이름의 폴더에 정적 리소스 보관 후 응답하도록 미들웨어 추가
 app.use(express.static('public'));
@@ -38,22 +39,27 @@ app.post('/detectLangs', function (req, res) {
  });
 
 // localhost:3000/translate로 요청 시 동작할 핸들러
-app.get('/translate', (req, res) => {
-   const query = '안녕하세요?';
+app.post('/translate', (req, res) => {
+  //  const query = '안녕하세요?';
    const url = 'https://openapi.naver.com/v1/papago/n2mt';
    
    const request = require('request');
    const options = {
        url, // url: url과 같음
-       form: {'source':'ko', 'target':'en', 'text':query},
-       headers: {'X-Naver-Client-Id':client_id, 'X-Naver-Client-Secret': client_secret}
+      //  form: {'source':'ko', 'target':'en', 'text':query},
+      form: req.body,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Naver-Client-Id':client_id, 
+        'X-Naver-Client-Secret': client_secret
+      }
     };
     // 실제로 POST 요청 전송 부분
    request.post(options, (error, response, body) => {
 
      if (!error && response.statusCode == 200) {
-       res.writeHead(200, {'Content-Type': 'text/json;charset=utf-8'});
-       res.end(body);
+      console.log(body);
+      res.send(body); // 응답 결과를 app.js로 전달하는 코드
      } else {
        res.status(response.statusCode).end();
        console.log('error = ' + response.statusCode);
