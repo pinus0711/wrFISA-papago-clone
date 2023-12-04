@@ -18,7 +18,7 @@ sourceTextArea.addEventListener('input', (event) => {
 
     timer = setTimeout(() => {
         const text = event.target.value;
-
+            
         const body = JSON.stringify({ query: text });
         
         // server.js로 비동기 요청 전송

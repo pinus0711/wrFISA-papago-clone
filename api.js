@@ -1,0 +1,3 @@
+detectLanguage()
+
+translateLanguage()
